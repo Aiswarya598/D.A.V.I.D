@@ -1,0 +1,78 @@
+---
+title: "Chi-Square Test Report"
+output: word_document
+params:
+  chi_state: ""
+  sample_variance: NA
+  sample_size: NA
+  pop_variance: NA
+  chi_sq_stat: NA
+  significance_level: NA
+  conclusion: ""
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## STEP 1: CREATING THE HYPOTHESIS
+Based on the information provided, the null and alternate hypothesis is given by:
+
+
+
+
+```{r, echo=FALSE}
+option <- params$chi_state
+if (option == "less") {
+  h0 <- sprintf("$$H_0 : \\sigma^2 \\geq %d $$", params$pop_variance)
+} else if (option == "greater") {
+  h0 <- sprintf("$$H_0 : \\sigma^2 \\leq %d $$", params$pop_variance)
+} else {
+  h0 <- sprintf("$$H_0 : \\sigma^2 = %d $$", params$pop_variance)
+}
+```
+
+```{r,echo=FALSE, results='asis'}
+
+knitr::asis_output(h0)
+```
+vs
+
+```{r, echo=FALSE}
+if (option == "less") {
+  h1 <- sprintf("$$H_1 : \\sigma^2 < %d $$", params$pop_variance)
+} else if (option == "greater") {
+  h1 <- sprintf("$$H_1 : \\sigma^2 > %d $$", params$pop_variance)
+} else {
+  h1 <- sprintf("$$H_1 : \\sigma^2 \\neq %d $$", params$pop_variance)
+}
+
+
+```
+
+```{r ,echo=FALSE, results='asis'}
+
+knitr::asis_output(h1)
+```
+
+
+## Step 2: Test Details
+
+```{r}
+  
+cat("Sample Variance: ", round(params$sample_variance, 4), "\n")
+cat("Sample Size: ", params$sample_size, "\n")
+cat("Population Variance: ", params$pop_variance, "\n")
+cat("Significance Level (α): ", params$significance_level, "\n")
+cat("Chi-Square Test Statistic: ", round(params$chi_sq_stat, 4), "\n")
+
+```
+
+## Step 3: Conclusion
+
+```{r}  
+
+cat("\n")
+cat("Conclusion: ", params$conclusion, "\n")
+
+```

@@ -1,0 +1,87 @@
+---
+title: "Sign Test Report"
+output: word_document
+params:
+  selected_column: ""
+  hypothesized_median: NA
+  alternative: ""
+  test_stat: NA
+  sample_size: NA
+  p_value: NA
+  critical_value: NA
+  conf_int: NA
+  conclusion: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+## STEP 1: CREATING THE HYPOTHESIS
+Based on the information provided, the null and alternate hypothesis is given by:
+
+```{r,echo=FALSE}
+if(params$alternative == "less") {
+  h0 <- sprintf("$$H_0 : M \\geq %d $$", params$hypothesized_median)
+} else if (params$alternative == "greater") {
+  h0 <- sprintf("$$H_0 : M \\leq %d $$", params$hypothesized_median)
+} else {  # Two-sided test
+  h0 <- sprintf("$$H_0 : M = %d $$", params$hypothesized_median)
+}
+
+```
+
+```{r,echo=FALSE, results='asis'}
+
+knitr::asis_output(h0)
+```
+vs
+```{r, echo=FALSE}
+if(params$alternative == "less") {
+  h1 <- sprintf("$$H_1 : M < %d $$", params$hypothesized_median)
+} else if (params$alternative == "greater") {
+  h1 <- sprintf("$$H_1 : M > %d $$", params$hypothesized_median)
+} else {  # Two-sided test
+  h1 <- sprintf("$$H_1 : M \\neq %d $$", params$hypothesized_median)
+}
+```
+
+```{r ,echo=FALSE, results='asis'}
+
+knitr::asis_output(h1)
+```
+
+## STEP 2: SELECTION OF THE CRITICAL REGION
+Based on the alpha value critical region is given by:
+
+```{r, echo=FALSE}
+if (params$alternative == "less") {
+  CR <- paste0("$$R = \\{ S : S < ", params$critical_value, " \\} $$")
+} else if (params$alternative == "greater") {
+  CR <- paste0("$$R = \\{ S : S > ", params$sample_size - params$critical_value, " \\} $$")
+} else {
+  CR <- paste0("$$R = \\{ S : S < ", params$critical_value, " \\} \\cup \\{ S : S > ", params$sample_size - params$critical_value, " \\} $$")
+}
+```
+
+```{r,echo=FALSE, results='asis'}
+knitr::asis_output(CR)
+```
+
+## STEP 3: CALCULATION OF THE TEST STATISTICS 
+
+The t-statistics is computed as follows :
+
+```{r,echo=FALSE}
+cat("Sample Size (n): ", params$sample_size, "\n")
+cat("Hypothesized Median: ", params$hypothesized_median, "\n")
+cat("Significance Level (α): ", 0.05, "\n")
+cat("Test Statistic (S): ", params$test_stat, "\n")
+cat("Critical Value (S_critical): ", params$critical_value, "\n")
+cat("P-value: ", params$p_value, "\n")
+```
+## STEP 4: CONCLUSION BASED ON P VALUE
+
+```{r,echo=FALSE}
+cat("Conclusion: ", params$conclusion, "\n")
+```
+

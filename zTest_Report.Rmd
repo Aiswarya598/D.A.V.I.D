@@ -1,0 +1,140 @@
+---
+title: "Z-Test Report"
+output: html_document
+params:
+  sample_mean: NA
+  sample_size: NA
+  population_mean: NA
+  population_sd: NA
+  z_statistic: NA
+  significance_level: NA
+  conclusion_z_statistic: ""
+  z_state: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+## STEP 1: CREATING THE HYPOTHESIS
+
+
+Based on the information provided, the null and alternate hypothesis is given by:
+```{r,echo=FALSE}
+option <- params$z_state
+if(option == "lessthan"){
+  h0 = sprintf("$$H_0 : \\mu \\geq %d $$",params$population_mean)
+} else if (option == "greaterthan"){
+  h0 = sprintf("$$H_0 : \\mu \\leq %d $$",params$population_mean)
+} else if (option == "equalto"){
+  h0 = sprintf("$$H_0 : \\mu = %d $$",params$population_mean)
+}
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::asis_output(h0)
+```
+
+
+vs
+
+```{r,echo=FALSE}
+
+
+if(option == "lessthan"){
+  h1 = sprintf("$$H_1 : \\mu < %d $$",params$population_mean)
+} else if (option == "greaterthan"){
+  h1 = sprintf("$$H_1 : \\mu > %d $$",params$population_mean)
+} else if (option == "equalto"){
+  h1 = sprintf("$$H_1 : \\mu \\neq %d $$",params$population_mean)
+}
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::asis_output(h1)
+```
+
+
+```{r}
+
+
+cat(" T-Test Results\n")
+cat("Hypothesized Mean: ", params$population_mean, "\n")
+cat("Alpha value:",params$significance_level,"\n")
+```
+
+## STEP 2: SELECTION OF THE CRITICAL REGION
+
+Based on the significant level of $\alpha$ = `r params$significant_level`, the rejection region is:
+```{r, echo=FALSE}
+if (option == "lessthan") {
+  CR = "$$R = \\{ z : z < z_{\\alpha} \\} $$"
+} else if (option == "greaterthan") {
+  CR = "$$R = \\{ z : z > z_{1-\\alpha} \\} $$"
+} else if (option == "equalto") {
+  CR = "$$R = \\{ z : |z| > z_{1-\\alpha/2} \\} $$"
+}
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::asis_output(CR)
+```
+
+
+```{r, echo=FALSE}
+
+if (params$z_state == "lessthan") {
+  critical_value <- qnorm(as.numeric(params$significant_level), lower.tail = TRUE)
+  CR <- paste0("$$R = \\{ z : z < ", round(critical_value, 3), " \\} $$")
+} else if (params$z_state == "greaterthan") {
+  critical_value <- qnorm(1 - as.numeric(params$significant_level), lower.tail = TRUE)
+  CR <- paste0("$$R = \\{ z : z > ", round(critical_value, 3), " \\} $$")
+} else if (params$z_state == "equalto") {
+  critical_value <- qnorm(1 - as.numeric(params$significant_level) / 2)
+  CR <- paste0("$$R = \\{ z : |z| > ", round(critical_value, 3), " \\} $$")
+}
+
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::asis_output(CR)
+```
+
+## STEP 3: CALCULATION OF THE TEST STATISTICS 
+
+The t-statistics is computed as follows :
+
+$$
+Z = \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}}
+$$
+$$
+Z = \frac{\bar{x} - `r params$population_mean`}{\frac{`r params$population_sd`}{\sqrt{n}}}
+$$
+
+
+
+
+```{r}
+cat("Sample Mean: ", params$sample_mean, "\n")
+cat("Sample Size: ", params$sample_size, "\n")
+cat("Population Mean: ", params$population_mean, "\n")
+cat("Population Standard Deviation: ", params$population_sd, "\n")
+cat("Z-Statistic: ", params$z_statistic, "\n")
+cat("Significant level:" ,params$significance_level,"\n")
+```
+
+```{r}
+if (params$z_state == "lessthan") {
+  critical_value <- qnorm(as.numeric(params$significant_level), lower.tail = TRUE)
+  CR <- paste0("$$R = \\{ z : z < ", round(critical_value, 3), " \\} $$")
+} else if (params$z_state == "greaterthan") {
+  critical_value <- qnorm(1 - as.numeric(params$significant_level), lower.tail = TRUE)
+  CR <- paste0("$$R = \\{ z : z > ", round(critical_value, 3), " \\} $$")
+} else if (params$z_state == "equalto") {
+  critical_value <- qnorm(1 - as.numeric(params$significant_level) / 2)
+  CR <- paste0("$$R = \\{ z : |z| > ", round(critical_value, 3), " \\} $$")
+}
+```
+## STEP 5: CONCLUSION BASED ON Z STATISTICS
+```{r}
+cat("Conclusion based on Z-statistic: ", params$conclusion_z_statistic, "\n")
+```
